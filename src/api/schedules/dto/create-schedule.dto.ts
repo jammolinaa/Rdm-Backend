@@ -1,11 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsObject,
-  IsBoolean,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsObject, IsBoolean } from 'class-validator';
 
 export class CreateScheduleDto {
   @IsNumber()
