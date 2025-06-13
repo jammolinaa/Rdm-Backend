@@ -8,7 +8,7 @@ export class Schedule {
   schedules_id: number;
 
   @ManyToOne(() => Device, (device) => device.schedules, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'devices_id' })
+  @JoinColumn({ name: 'device_id' })
   device: Device;
 
   @Column({ type: 'varchar', length: 255 })

@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
 import { Schedule } from 'src/data/entities/schedules/schedule.entity';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
@@ -14,9 +13,13 @@ export class SchedulesService {
   ) {}
 
   async create(dto: CreateScheduleDto): Promise<Schedule> {
-    const schedule = this.scheduleRepository.create(dto);
-    return await this.scheduleRepository.save(schedule);
-  }
+      const schedule = this.scheduleRepository.create({
+        ...dto,
+        device: { device_id: dto.device_id },
+    });
+
+  return await this.scheduleRepository.save(schedule);
+}
 
   async findAll(): Promise<Schedule[]> {
     return this.scheduleRepository.find();

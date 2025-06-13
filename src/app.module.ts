@@ -5,13 +5,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './data/config/database.config';
 import { DevicesModule } from './api/devices/devices.module';
 import { SchedulesModule } from './api/schedules/schedules.module';
+import { ConditionsModule } from './api/conditions/conditions.module';
+import { AlertsModule } from './api/alerts/alerts.module';
+import { TypeModule } from './api/type/type.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: async () => typeOrmConfig,
       }),
-      DevicesModule, SchedulesModule],
+      DevicesModule, SchedulesModule, ConditionsModule, AlertsModule, TypeModule],
   // TypeOrmModule.forRoot({
   //     type: 'mysql',
   //     host: 'localhost',

@@ -12,7 +12,7 @@ export class CreateScheduleDto {
   schedules_id: number;
 
   @IsNumber()
-  devices_id: number;
+  device_id: number;
 
   @IsString()
   @IsNotEmpty()
