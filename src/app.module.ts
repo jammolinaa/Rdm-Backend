@@ -9,6 +9,7 @@ import { ConditionsModule } from './api/conditions/conditions.module';
 import { AlertsModule } from './api/alerts/alerts.module';
 import { TypeModule } from './api/type/type.module';
 import { SourcesModule } from './api/sources/sources.module';
+import { SystemModule } from './api/system/system.module';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { SourcesModule } from './api/sources/sources.module';
       useFactory: async () => typeOrmConfig,
       }),
       DevicesModule, SchedulesModule, ConditionsModule, 
-      AlertsModule, TypeModule, SourcesModule],
+      AlertsModule, TypeModule, SourcesModule, SystemModule],
   // TypeOrmModule.forRoot({
   //     type: 'mysql',
   //     host: 'localhost',
