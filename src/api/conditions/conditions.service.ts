@@ -26,10 +26,19 @@ export class ConditionsService {
     return condition;
   }
 
-  async update(id: number, CreateConditionDto: UpdateConditionDto): Promise<Condition> {
-    await this.conditionRepository.update(id, CreateConditionDto);
-    return  this.findOne(id);
+  async update(id: number, dto: UpdateConditionDto): Promise<Condition> {
+  const condition = await this.conditionRepository.preload({
+    condition_id: id,
+    ...dto,
+  });
+
+  if (!condition) {
+    throw new NotFoundException(`Condition con ID ${id} no encontrado`);
   }
+
+  return this.conditionRepository.save(condition);
+}
+
 
   async remove(id: number): Promise<{message: string}> {
     const result = await this.conditionRepository.delete(id);

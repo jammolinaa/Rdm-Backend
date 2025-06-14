@@ -10,7 +10,7 @@ export class Type {
     @Column()
     name: string;
     
-    @OneToMany(() => Source, (source) => source.type_id)
+    @OneToMany(() => Source, (source) => source.type)
     sources: Source[];
       
 }

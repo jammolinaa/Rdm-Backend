@@ -13,9 +13,12 @@ export class DevicesService {
   ) {}
 
   async create(dto: CreateDeviceDto): Promise<Device> {
-    const device = this.deviceRepository.create(dto);
-    return await this.deviceRepository.save(device);
-  }
+  const device = this.deviceRepository.create({
+    ...dto,
+    source: { sources_id: dto.sources_id }, // 👈 correcta relación
+  });
+  return await this.deviceRepository.save(device);
+}
 
   async findAll(): Promise<Device[]> {
     return this.deviceRepository.find();
@@ -28,9 +31,18 @@ export class DevicesService {
   }
 
   async update(id: number, dto: UpdateDeviceDto): Promise<Device> {
-    await this.deviceRepository.update(id, dto);
-    return this.findOne(id);
+  const device = await this.deviceRepository.preload({
+    device_id: id,
+    ...dto,
+  });
+
+  if (!device) {
+    throw new NotFoundException(`Device con ID ${id} no encontrado`);
   }
+
+  return await this.deviceRepository.save(device);
+}
+
 
   async remove(id: number): Promise<{ message: string }> {
     const result = await this.deviceRepository.delete(id);

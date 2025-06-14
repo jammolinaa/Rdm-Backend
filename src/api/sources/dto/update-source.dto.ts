@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateSourceDto } from './create-source.dto';
+import { IsOptional, IsNumber } from 'class-validator';
 
-export class UpdateSourceDto extends PartialType(CreateSourceDto) {}
+export class UpdateSourceDto {
+  @IsOptional()
+  @IsNumber()
+  type_id?: number;
+
+
+}

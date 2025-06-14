@@ -34,9 +34,20 @@ export class SchedulesService {
   }
 
   async update(id: number, dto: UpdateScheduleDto): Promise<Schedule> {
-    await this.scheduleRepository.update(id, dto);
-    return this.findOne(id);
+  const schedule = await this.scheduleRepository.preload({
+    schedules_id: id,
+    ...dto,
+    device: dto.device_id ? { device_id: dto.device_id } : undefined,
+  });
+
+  if (!schedule) {
+    throw new NotFoundException(`Schedule con ID ${id} no encontrado`);
   }
+
+  return this.scheduleRepository.save(schedule);
+}
+
+
 
   async remove(id: number): Promise<{ message: string }> {
     const result = await this.scheduleRepository.delete(id);

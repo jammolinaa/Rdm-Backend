@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Type } from "../type/type.entity";
+import { Device } from "../devices/device.entity";
 
 @Entity('source')
 export class Source {
@@ -9,6 +10,9 @@ export class Source {
 
     @ManyToOne(() => Type, (type) => type.sources, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'type_id' })
-    type_id: Type;
+    type: Type;
+
+    @OneToMany(() => Device, (device) => device.source)
+     devices: Device[];
 
 }

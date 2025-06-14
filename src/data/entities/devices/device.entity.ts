@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Schedule } from '../schedules/schedule.entity';
+import { Source } from '../sources/source.entity';
 
 @Entity('device')
 export class Device {
@@ -9,8 +10,9 @@ export class Device {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column()
-  sources_id: number;
+  @ManyToOne(() => Source, (source) => source.devices, { eager: false, nullable: false })
+  @JoinColumn({ name: 'sources_id' })
+  source: Source;
 
   @Column()
   system_device_id: number;

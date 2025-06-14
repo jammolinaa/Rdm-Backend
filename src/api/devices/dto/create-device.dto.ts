@@ -8,6 +8,7 @@ export class CreateDeviceDto {
   @IsNotEmpty()
   name: string;
 
+  @IsNotEmpty()
   @IsNumber()
   sources_id: number;
 

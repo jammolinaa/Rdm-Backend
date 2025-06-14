@@ -7,7 +7,7 @@ export class Schedule {
   @PrimaryGeneratedColumn()
   schedules_id: number;
 
-  @ManyToOne(() => Device, (device) => device.schedules, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Device)
   @JoinColumn({ name: 'device_id' })
   device: Device;
 

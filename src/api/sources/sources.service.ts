@@ -3,7 +3,7 @@ import { CreateSourceDto } from './dto/create-source.dto';
 import { UpdateSourceDto } from './dto/update-source.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Source } from 'src/data/entities/sources/source.entity';
-import { Repository, Sort } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SourcesService {
@@ -13,11 +13,11 @@ export class SourcesService {
   ) {}
 
 async create(dto: CreateSourceDto): Promise<Source> {
-    const schedule = this.sourceRepository.create({
+    const source = this.sourceRepository.create({
       ...dto,
-      type_id: { type_id: dto.type_id },
+      type: { type_id: dto.type_id },
     });
-    return await this.sourceRepository.save(schedule);
+    return await this.sourceRepository.save(source);
 }
 
   async findAll(): Promise<Source[]> {
@@ -33,13 +33,19 @@ async create(dto: CreateSourceDto): Promise<Source> {
     }
 
   async update(id: number, dto: UpdateSourceDto): Promise<Source> {
-    const schedule = this.sourceRepository.create({
-        ...dto,
-        type_id: { type_id: dto.type_id },
-    });
-      await this.sourceRepository.update(id, schedule);
-      return this.findOne(id);
-    }
+  const source = await this.sourceRepository.preload({
+    sources_id: id,
+    ...dto,
+    type: dto.type_id ? { type_id: dto.type_id } : undefined,
+  });
+
+  if (!source) {
+    throw new NotFoundException(`Source con ID ${id} no encontrado`);
+  }
+
+  return this.sourceRepository.save(source);
+}
+
 
   async remove(id: number): Promise<{ message: string }> {
     const result = await this.sourceRepository.delete(id);
