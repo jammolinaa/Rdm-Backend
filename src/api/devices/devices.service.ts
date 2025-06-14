@@ -12,13 +12,20 @@ export class DevicesService {
     private deviceRepository: Repository<Device>,
   ) {}
 
-  async create(dto: CreateDeviceDto): Promise<Device> {
+async create(dto: CreateDeviceDto): Promise<Device> {
   const device = this.deviceRepository.create({
-    ...dto,
-    source: { sources_id: dto.sources_id }, // 👈 correcta relación
+    name: dto.name,
+    source: { sources_id: dto.sources_id },  // Relación con Source
+    systemDevice: { system_device_id: dto.system_device_id }, // 🔧 Esto es lo clave
+    is_active: dto.is_active ?? true,
+    communication_route: dto.communication_route,
+    event: dto.event,
+    user_id: dto.user_id,
   });
   return await this.deviceRepository.save(device);
 }
+
+
 
   async findAll(): Promise<Device[]> {
     return this.deviceRepository.find();

@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Schedule } from '../schedules/schedule.entity';
 import { Source } from '../sources/source.entity';
+import { SystemDevice } from '../system_device/system_device.entity';
 
 @Entity('device')
 export class Device {
@@ -14,8 +15,9 @@ export class Device {
   @JoinColumn({ name: 'sources_id' })
   source: Source;
 
-  @Column()
-  system_device_id: number;
+  @ManyToOne(() => SystemDevice, (systemDevice) => systemDevice.devices, { eager: true })
+  @JoinColumn({ name: 'system_device_id' })
+  systemDevice: SystemDevice;
 
   @Column({ default: true })
   is_active: boolean;
@@ -34,5 +36,5 @@ export class Device {
 
   @OneToMany(() => Schedule, (schedule) => schedule.device)
   schedules: Schedule[];
-  
+ 
 }

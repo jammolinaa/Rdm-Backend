@@ -10,6 +10,8 @@ import { AlertsModule } from './api/alerts/alerts.module';
 import { TypeModule } from './api/type/type.module';
 import { SourcesModule } from './api/sources/sources.module';
 import { SystemModule } from './api/system/system.module';
+import { ClassDeviceModule } from './api/class_device/class_device.module';
+import { SystemDeviceModule } from './api/system_device/system_device.module';
 
 @Module({
   imports: [
@@ -17,19 +19,8 @@ import { SystemModule } from './api/system/system.module';
       useFactory: async () => typeOrmConfig,
       }),
       DevicesModule, SchedulesModule, ConditionsModule, 
-      AlertsModule, TypeModule, SourcesModule, SystemModule],
-  // TypeOrmModule.forRoot({
-  //     type: 'mysql',
-  //     host: 'localhost',
-  //     port: 3306,
-  //     username: 'root',
-  //     password: '',
-  //     database: 'rdmprueba',
-  //     entities: [DevicesModule, SchedulesModule],
-  //     synchronize: true,
-  //   }),
-  //   DevicesModule, SchedulesModule 
-  // ],
+      AlertsModule, TypeModule, SourcesModule, SystemModule,
+      ClassDeviceModule, SystemDeviceModule],
 
   controllers: [AppController],
   providers: [AppService],

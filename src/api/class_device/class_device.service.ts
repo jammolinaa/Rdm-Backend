@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ClassDevice } from 'src/data/entities/class_device/class_device.entity';
 import { CreateClassDeviceDto } from './dto/create-class_device.dto';
 import { UpdateClassDeviceDto } from './dto/update-class_device.dto';
 
 @Injectable()
 export class ClassDeviceService {
-  create(createClassDeviceDto: CreateClassDeviceDto) {
-    return 'This action adds a new classDevice';
+  constructor(
+    @InjectRepository(ClassDevice)
+    private readonly classDeviceRepository: Repository<ClassDevice>,
+  ) {}
+
+  async create(dto: CreateClassDeviceDto): Promise<ClassDevice> {
+    const classDevice = this.classDeviceRepository.create(dto);
+    return await this.classDeviceRepository.save(classDevice);
   }
 
-  findAll() {
-    return `This action returns all classDevice`;
+  async findAll(): Promise<ClassDevice[]> {
+    return this.classDeviceRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} classDevice`;
+  async findOne(id: number): Promise<ClassDevice> {
+    const classDevice = await this.classDeviceRepository.findOneBy({ class_device_id: id });
+    if (!classDevice) {
+      throw new NotFoundException(`ClassDevice con ID ${id} no encontrado`);
+    }
+    return classDevice;
   }
 
-  update(id: number, updateClassDeviceDto: UpdateClassDeviceDto) {
-    return `This action updates a #${id} classDevice`;
+  async update(id: number, dto: UpdateClassDeviceDto): Promise<ClassDevice> {
+    await this.classDeviceRepository.update(id, dto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} classDevice`;
+  async remove(id: number): Promise<{ message: string }> {
+    const result = await this.classDeviceRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`ClassDevice con ID ${id} no encontrado`);
+    }
+    return { message: `ClassDevice con ID ${id} eliminado` };
   }
 }

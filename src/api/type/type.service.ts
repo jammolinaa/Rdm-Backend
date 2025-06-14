@@ -35,10 +35,13 @@ export class TypeService {
 
 
   async remove(id: number): Promise<{ message: string }> {
-    const result = await this.TypeRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Device con ID ${id} no encontrado`);
-    }
-    return { message: `Device con ID ${id} eliminado` };
+  const type = await this.TypeRepository.findOne({ where: { type_id: id } });
+  if (!type) {
+    throw new NotFoundException(`Type con ID ${id} no encontrado`);
   }
+
+  await this.TypeRepository.remove(type); // ← Esto sí respeta onDelete: 'CASCADE'
+  return { message: `Type con ID ${id} eliminado` };
+}
+
 }

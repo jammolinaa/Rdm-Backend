@@ -1,8 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsObject } from 'class-validator';
 
 export class CreateDeviceDto {
-  @IsNumber()
-  device_id: number;
 
   @IsString()
   @IsNotEmpty()

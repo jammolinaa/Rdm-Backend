@@ -11,7 +11,7 @@ export class Source {
     @ManyToOne(() => Type, (type) => type.sources, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'type_id' })
     type: Type;
-
+    
     @OneToMany(() => Device, (device) => device.source)
      devices: Device[];
 
