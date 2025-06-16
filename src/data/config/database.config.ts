@@ -6,7 +6,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     port: 3306,
     username: 'root',
     password: '',
-    database: 'rdm',
+    database: 'rdm2',
     entities: [__dirname + '/../**/*.entity{.ts,.js}'], 
     synchronize: true,
     // migrationsRun: false,
