@@ -1,10 +1,9 @@
 import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { Alert } from "src/data/entities/alerts/alert.entity";
+import { OneToMany } from "typeorm";
 
 export class CreateConditionDto {
     
-    @IsNumber()
-    condition_id: number;
-        
     @IsString()
     @IsNotEmpty()
     name: string

@@ -40,7 +40,7 @@ export class TypeService {
     throw new NotFoundException(`Type con ID ${id} no encontrado`);
   }
 
-  await this.TypeRepository.remove(type); // ← Esto sí respeta onDelete: 'CASCADE'
+  await this.TypeRepository.remove(type);
   return { message: `Type con ID ${id} eliminado` };
 }
 

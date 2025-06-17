@@ -12,9 +12,9 @@ export class Type {
     @Column()
     name: string;
     
-    @OneToMany(() => Source, (source) => source.type)
-    sources: Source[];
+    @OneToMany(() => Source, (source) => source.type, { onDelete: 'CASCADE' })
+    sources: Array<Source>;
 
-    @OneToMany(() => SystemDevice, (systemdevice) => systemdevice.type)
+    @OneToMany(() => SystemDevice, (systemdevice) => systemdevice.type, { onDelete: 'CASCADE' })
     systemDevices: SystemDevice[]; 
 }

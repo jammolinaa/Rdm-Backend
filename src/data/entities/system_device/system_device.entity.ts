@@ -9,17 +9,18 @@ export class SystemDevice {
   @PrimaryGeneratedColumn()
   system_device_id: number;
 
-  @ManyToOne(() => ClassDevice, { eager: true })
+  @ManyToOne(() => ClassDevice, {onDelete: 'CASCADE'})
   @JoinColumn({ name: 'class_device_id' })
   class_device: ClassDevice;
 
-  @ManyToOne(() => Type, { eager: true })
-  @JoinColumn({ name: 'type_id' })
-  type: Type;
+ @ManyToOne(() => Type, { onDelete: 'CASCADE' })
+ @JoinColumn({ name: 'type_id' })
+ type: Type;
 
-  @ManyToOne(() => System, { eager: true })
+  @ManyToOne(() => System, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'system_id' })
   system: System;
+
 
   @Column({ type: 'json' })
   propierty: Record<string, any>;

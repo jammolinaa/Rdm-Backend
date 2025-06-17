@@ -9,6 +9,6 @@ export class System {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @OneToMany(() => SystemDevice, (sd) => sd.system)
+  @OneToMany(() => SystemDevice, (systemdevice) => systemdevice.system, { onDelete: 'CASCADE' })
   systemDevices: SystemDevice[];
 }

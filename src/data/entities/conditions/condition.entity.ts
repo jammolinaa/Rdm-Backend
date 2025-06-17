@@ -1,8 +1,9 @@
-// condition.entity.ts
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Alert } from "../alerts/alert.entity";
 
 @Entity('conditions')
 export class Condition {
+  [x: string]: any;
   @PrimaryGeneratedColumn()
   condition_id: number;
 
@@ -11,4 +12,10 @@ export class Condition {
 
   @Column()
   description: string; 
+
+  // @OneToMany(() => Alert, (alert) => alert.condition, { onDelete: 'CASCADE' })
+  // aler: Array<Alert>;
+
+  @OneToMany(() => Alert, (alert) => alert.condition)
+  alerts: Alert[];
 }

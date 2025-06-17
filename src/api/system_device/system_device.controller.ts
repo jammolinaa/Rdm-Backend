@@ -5,7 +5,7 @@ import { UpdateSystemDeviceDto } from './dto/update-system_device.dto';
 
 @Controller('system_device')
 export class SystemDeviceController {
-  constructor(private readonly systemDeviceService: SystemDeviceService) {}
+  constructor(private readonly systemDeviceService: SystemDeviceService) { }
 
   @Post()
   create(@Body() createSystemDeviceDto: CreateSystemDeviceDto) {

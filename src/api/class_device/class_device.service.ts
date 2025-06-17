@@ -18,7 +18,7 @@ export class ClassDeviceService {
   }
 
   async findAll(): Promise<ClassDevice[]> {
-    return this.classDeviceRepository.find();
+    return this.classDeviceRepository.find();    
   }
 
   async findOne(id: number): Promise<ClassDevice> {

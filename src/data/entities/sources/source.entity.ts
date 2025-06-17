@@ -12,7 +12,7 @@ export class Source {
     @JoinColumn({ name: 'type_id' })
     type: Type;
     
-    @OneToMany(() => Device, (device) => device.source)
-     devices: Device[];
+    @OneToMany(() => Device, (device) => device.source, { onDelete: 'CASCADE' })
+    devices: Device[];
 
 }

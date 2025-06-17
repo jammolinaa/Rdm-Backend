@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Patch } from '@nestjs/common';
 import { AlertsService } from './alerts.service';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { UpdateAlertDto } from './dto/update-alert.dto';
@@ -22,7 +22,7 @@ export class AlertsController {
     return this.alertsService.findOne(+id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateAlertDto: UpdateAlertDto) {
     return this.alertsService.update(+id, updateAlertDto);
   }

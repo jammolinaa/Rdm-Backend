@@ -17,7 +17,7 @@ export class Alert {
   @JoinColumn({ name: 'device_id' })
   device: Device;
 
-  @ManyToOne(() => Condition)
+  @ManyToOne (() => Condition, (alert) => alert.condition, {onDelete: 'CASCADE'})
   @JoinColumn({ name: 'condition_id' })
   condition: Condition;
 

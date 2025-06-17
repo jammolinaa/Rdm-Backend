@@ -21,16 +21,22 @@ async create(dto: CreateSourceDto): Promise<Source> {
 }
 
   async findAll(): Promise<Source[]> {
-      return this.sourceRepository.find();
-  }
+  return this.sourceRepository.find({
+    relations: ['type'], 
+  });
+}
 
   async findOne(id: number): Promise<Source> {
-      const source = await this.sourceRepository.findOneBy({ sources_id: id });
-      if (!source) {
-        throw new NotFoundException(`Source con ID ${id} no encontrado`);
-      }
-      return source;
-    }
+  const source = await this.sourceRepository.findOne({
+    where: { sources_id: id },
+    relations: ['type'],
+  });
+  if (!source) {
+    throw new NotFoundException(`Source con ID ${id} no encontrado`);
+  }
+  return source;
+}
+
 
   async update(id: number, dto: UpdateSourceDto): Promise<Source> {
   const source = await this.sourceRepository.preload({
