@@ -4,7 +4,7 @@ import { CreateSourceDto } from './dto/create-source.dto';
 import { UpdateSourceDto } from './dto/update-source.dto';
 
 @Controller('sources')
-@UsePipes(new ValidationPipe)
+@UsePipes(new ValidationPipe())
 export class SourcesController {
   constructor(private readonly sourcesService: SourcesService) {}
 

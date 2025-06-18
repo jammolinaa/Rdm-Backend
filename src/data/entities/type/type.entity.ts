@@ -16,5 +16,5 @@ export class Type {
     sources: Array<Source>;
 
     @OneToMany(() => SystemDevice, (systemdevice) => systemdevice.type, { onDelete: 'CASCADE' })
-    systemDevices: SystemDevice[]; 
+    systemDevices: Array<SystemDevice>; 
 }

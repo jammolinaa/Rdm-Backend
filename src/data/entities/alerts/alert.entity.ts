@@ -13,7 +13,7 @@ export class Alert {
   @Column()
   description: string;
 
-  @ManyToOne(() => Device)
+  @ManyToOne(() => Device, (device)=> device.alerts, {onDelete: 'CASCADE'})
   @JoinColumn({ name: 'device_id' })
   device: Device;
 

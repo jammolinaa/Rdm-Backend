@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { SystemDeviceService } from './system_device.service';
 import { CreateSystemDeviceDto } from './dto/create-system_device.dto';
 import { UpdateSystemDeviceDto } from './dto/update-system_device.dto';
 
 @Controller('system_device')
+@UsePipes(new ValidationPipe())
 export class SystemDeviceController {
   constructor(private readonly systemDeviceService: SystemDeviceService) { }
 

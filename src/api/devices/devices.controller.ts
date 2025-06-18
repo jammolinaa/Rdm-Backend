@@ -31,8 +31,14 @@ export class DevicesController {
     return this.devicesService.update(id, updateDeviceDto);
   }
 
+ // devices.controller.ts
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.devicesService.remove(id);
+  async remove(@Param('id') id: number) {
+    try {
+      return await this.devicesService.remove(+id);
+    } catch (error) {
+      console.error(error); // <--- esto te mostrará el error real
+      throw error;
+    }
   }
 }

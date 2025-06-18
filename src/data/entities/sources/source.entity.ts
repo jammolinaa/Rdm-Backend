@@ -13,6 +13,6 @@ export class Source {
     type: Type;
     
     @OneToMany(() => Device, (device) => device.source, { onDelete: 'CASCADE' })
-    devices: Device[];
+    devices: Array<Device>;
 
 }

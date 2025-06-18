@@ -1,9 +1,7 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString, IsObject, IsBoolean } from 'class-validator';
 
 export class CreateScheduleDto {
-  @IsNumber()
-  schedules_id: number;
-
+  
   @IsNumber()
   device_id: number;
 

@@ -13,9 +13,6 @@ export class Condition {
   @Column()
   description: string; 
 
-  // @OneToMany(() => Alert, (alert) => alert.condition, { onDelete: 'CASCADE' })
-  // aler: Array<Alert>;
-
-  @OneToMany(() => Alert, (alert) => alert.condition)
-  alerts: Alert[];
+  @OneToMany(() => Alert, (alert) => alert.condition, { onDelete: 'CASCADE' })
+  aler: Array<Alert>;
 }

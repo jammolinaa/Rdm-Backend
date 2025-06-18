@@ -7,10 +7,10 @@ export class Schedule {
   @PrimaryGeneratedColumn()
   schedules_id: number;
 
-  @ManyToOne(() => Device)
+  @ManyToOne(() => Device, (device) => device.schedules, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'device_id' })
   device: Device;
-
+  
   @Column({ type: 'varchar', length: 255 })
   name: string;
 

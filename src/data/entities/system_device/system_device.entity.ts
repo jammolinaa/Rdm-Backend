@@ -26,6 +26,6 @@ export class SystemDevice {
   propierty: Record<string, any>;
   
   @OneToMany(() => Device, (device) => device.systemDevice)
-  devices: Device[];
+  devices: Array<Device>;
 
 } 

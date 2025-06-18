@@ -10,5 +10,5 @@ export class System {
   name: string;
 
   @OneToMany(() => SystemDevice, (systemdevice) => systemdevice.system, { onDelete: 'CASCADE' })
-  systemDevices: SystemDevice[];
+  systemDevices: Array<SystemDevice>;
 }

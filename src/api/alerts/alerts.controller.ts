@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
 import { AlertsService } from './alerts.service';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { UpdateAlertDto } from './dto/update-alert.dto';
 
 @Controller('alerts')
+@UsePipes(new ValidationPipe())
 export class AlertsController {
   constructor(private readonly alertsService: AlertsService) {}
 

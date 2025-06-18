@@ -28,7 +28,9 @@ async create(dto: CreateDeviceDto): Promise<Device> {
 
 
   async findAll(): Promise<Device[]> {
-    return this.deviceRepository.find();
+    return this.deviceRepository.find({
+      relations: ['source', 'systemDevice']
+    });
   }
 
   async findOne(id: number): Promise<Device> {
@@ -38,17 +40,26 @@ async create(dto: CreateDeviceDto): Promise<Device> {
   }
 
   async update(id: number, dto: UpdateDeviceDto): Promise<Device> {
-  const device = await this.deviceRepository.preload({
-    device_id: id,
-    ...dto,
+  const device = await this.deviceRepository.findOne({ where: { device_id: id } });
+  if (!device) throw new NotFoundException(`Device con ID ${id} no encontrado`);
+
+  // Asignar campos simples
+  Object.assign(device, {
+    name: dto.name ?? device.name,
+    is_active: dto.is_active ?? device.is_active,
+    communication_route: dto.communication_route ?? device.communication_route,
+    event: dto.event ?? device.event,
+    user_id: dto.user_id ?? device.user_id,
   });
 
-  if (!device) {
-    throw new NotFoundException(`Device con ID ${id} no encontrado`);
-  }
+  // Asignar relaciones si vienen los IDs
+  if (dto.sources_id) device.source = { sources_id: dto.sources_id } as any;
+  if (dto.system_device_id) device.systemDevice = { system_device_id: dto.system_device_id } as any;
 
-  return await this.deviceRepository.save(device);
+  return this.deviceRepository.save(device);
 }
+
+
 
 
   async remove(id: number): Promise<{ message: string }> {
