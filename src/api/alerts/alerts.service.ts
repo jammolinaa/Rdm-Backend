@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Alert } from 'src/data/entities/alerts/alert.entity';
-import { Condition } from 'src/data/entities/conditions/condition.entity';
-import { Device } from 'src/data/entities/devices/device.entity';
 import { CreateAlertDto } from './dto/create-alert.dto';
 import { UpdateAlertDto } from './dto/update-alert.dto';
 
@@ -15,25 +13,25 @@ export class AlertsService {
   ) {}
 
   async create(dto: CreateAlertDto): Promise<Alert> {
-  const alert = this.alertRepository.create({
-    ...dto,
-    condition: { condition_id: dto.condition_id },
-    device: { device_id: dto.device_id },
-  });
+    const alert = this.alertRepository.create({
+      ...dto,
+      condition: { condition_id: dto.condition_id },
+      device: { device_id: dto.device_id },
+    });
 
-  const saved = await this.alertRepository.save(alert);
+    const saved = await this.alertRepository.save(alert);
 
-  const fullAlert = await this.alertRepository.findOne({
-    where: { alerts_id: saved.alerts_id },
-    relations: ['condition', 'device'],
-  });
+    const fullAlert = await this.alertRepository.findOne({
+      where: { alerts_id: saved.alerts_id },
+      relations: ['condition', 'device'],
+    });
 
-  if (!fullAlert) {
-    throw new NotFoundException(`No se encontró la alerta recién creada`);
+    if (!fullAlert) {
+      throw new NotFoundException(`No se encontró la alerta recién creada`);
+    }
+
+    return fullAlert;
   }
-
-  return fullAlert;
-}
 
   async findAll(): Promise<Alert[]> {
     return this.alertRepository.find({
@@ -58,7 +56,9 @@ export class AlertsService {
     const alert = await this.alertRepository.preload({
       alerts_id: id,
       ...dto,
-      condition: dto.condition_id ? { condition_id: dto.condition_id } : undefined,
+      condition: dto.condition_id
+        ? { condition_id: dto.condition_id }
+        : undefined,
       device: dto.device_id ? { device_id: dto.device_id } : undefined,
     });
 

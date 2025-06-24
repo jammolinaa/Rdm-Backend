@@ -6,5 +6,4 @@ export class UpdateLastValueDto extends PartialType(CreateLastValueDto) {
   @IsOptional()
   @IsNumber()
   device_id?: number;
-    
 }

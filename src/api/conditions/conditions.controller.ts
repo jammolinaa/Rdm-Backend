@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ConditionsService } from './conditions.service';
 import { CreateConditionDto } from './dto/create-condition.dto';
 import { UpdateConditionDto } from './dto/update-condition.dto';
@@ -24,7 +34,10 @@ export class ConditionsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateConditionDto: UpdateConditionDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateConditionDto: UpdateConditionDto,
+  ) {
     return this.conditionsService.update(+id, updateConditionDto);
   }
 

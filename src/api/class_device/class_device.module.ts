@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClassDevice } from 'src/data/entities/class_device/class_device.entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([ClassDevice])],
+  imports: [TypeOrmModule.forFeature([ClassDevice])],
   controllers: [ClassDeviceController],
   providers: [ClassDeviceService],
 })

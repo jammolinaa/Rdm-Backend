@@ -4,5 +4,4 @@ export class UpdateScheduleDto {
   @IsOptional()
   @IsNumber()
   device_id?: number;
-
 }

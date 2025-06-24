@@ -23,31 +23,33 @@ export class SystemDeviceService {
     return await this.systemDeviceRepository.save(systemDevice);
   }
 
- async findAll(): Promise<SystemDevice[]> {
-  return this.systemDeviceRepository.find({
-    relations: ['class_device', 'type', 'system'],
-  });
-}
-
-  async findOne(id: number): Promise<SystemDevice> {
-  const item = await this.systemDeviceRepository.findOne({
-    where: { system_device_id: id },
-    relations: ['class_device', 'type', 'system'],
-  });
-
-  if (!item) {
-    throw new NotFoundException(`SystemDevice con ID ${id} no encontrado`);
+  async findAll(): Promise<SystemDevice[]> {
+    return this.systemDeviceRepository.find({
+      relations: ['class_device', 'type', 'system'],
+    });
   }
 
-  return item;
-}
+  async findOne(id: number): Promise<SystemDevice> {
+    const item = await this.systemDeviceRepository.findOne({
+      where: { system_device_id: id },
+      relations: ['class_device', 'type', 'system'],
+    });
+
+    if (!item) {
+      throw new NotFoundException(`SystemDevice con ID ${id} no encontrado`);
+    }
+
+    return item;
+  }
 
   async update(id: number, dto: UpdateSystemDeviceDto): Promise<SystemDevice> {
     const existing = await this.findOne(id);
 
     const updated = {
       ...existing,
-      ...(dto.class_device_id && { class_device: { class_device_id: dto.class_device_id } }),
+      ...(dto.class_device_id && {
+        class_device: { class_device_id: dto.class_device_id },
+      }),
       ...(dto.type_id && { type: { type_id: dto.type_id } }),
       ...(dto.system_id && { system: { system_id: dto.system_id } }),
       ...(dto.propierty && { propierty: dto.propierty }),
@@ -55,8 +57,6 @@ export class SystemDeviceService {
 
     await this.systemDeviceRepository.save(updated);
     return this.findOne(id);
-
-    
   }
 
   async remove(id: number): Promise<{ message: string }> {

@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { DevicesService } from './devices.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
@@ -31,14 +42,8 @@ export class DevicesController {
     return this.devicesService.update(id, updateDeviceDto);
   }
 
- // devices.controller.ts
   @Delete(':id')
-  async remove(@Param('id') id: number) {
-    try {
-      return await this.devicesService.remove(+id);
-    } catch (error) {
-      console.error(error); // <--- esto te mostrará el error real
-      throw error;
-    }
+  remove(@Param('id') id: string) {
+    return this.devicesService.remove(+id);
   }
 }

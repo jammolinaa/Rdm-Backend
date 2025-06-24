@@ -1,5 +1,3 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateDeviceDto } from './create-device.dto';
 import { IsOptional, IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class UpdateDeviceDto {

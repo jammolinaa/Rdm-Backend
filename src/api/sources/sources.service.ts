@@ -12,46 +12,44 @@ export class SourcesService {
     private readonly sourceRepository: Repository<Source>,
   ) {}
 
-async create(dto: CreateSourceDto): Promise<Source> {
+  async create(dto: CreateSourceDto): Promise<Source> {
     const source = this.sourceRepository.create({
       ...dto,
       type: { type_id: dto.type_id },
     });
     return await this.sourceRepository.save(source);
-}
+  }
 
   async findAll(): Promise<Source[]> {
-  return this.sourceRepository.find({
-    relations: ['type'], 
-  });
-}
+    return this.sourceRepository.find({
+      relations: ['type'],
+    });
+  }
 
   async findOne(id: number): Promise<Source> {
-  const source = await this.sourceRepository.findOne({
-    where: { sources_id: id },
-    relations: ['type'],
-  });
-  if (!source) {
-    throw new NotFoundException(`Source con ID ${id} no encontrado`);
+    const source = await this.sourceRepository.findOne({
+      where: { sources_id: id },
+      relations: ['type'],
+    });
+    if (!source) {
+      throw new NotFoundException(`Source con ID ${id} no encontrado`);
+    }
+    return source;
   }
-  return source;
-}
-
 
   async update(id: number, dto: UpdateSourceDto): Promise<Source> {
-  const source = await this.sourceRepository.preload({
-    sources_id: id,
-    ...dto,
-    type: dto.type_id ? { type_id: dto.type_id } : undefined,
-  });
+    const source = await this.sourceRepository.preload({
+      sources_id: id,
+      ...dto,
+      type: dto.type_id ? { type_id: dto.type_id } : undefined,
+    });
 
-  if (!source) {
-    throw new NotFoundException(`Source con ID ${id} no encontrado`);
+    if (!source) {
+      throw new NotFoundException(`Source con ID ${id} no encontrado`);
+    }
+
+    return this.sourceRepository.save(source);
   }
-
-  return this.sourceRepository.save(source);
-}
-
 
   async remove(id: number): Promise<{ message: string }> {
     const result = await this.sourceRepository.delete(id);

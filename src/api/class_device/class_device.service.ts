@@ -18,11 +18,13 @@ export class ClassDeviceService {
   }
 
   async findAll(): Promise<ClassDevice[]> {
-    return this.classDeviceRepository.find();    
+    return this.classDeviceRepository.find();
   }
 
   async findOne(id: number): Promise<ClassDevice> {
-    const classDevice = await this.classDeviceRepository.findOneBy({ class_device_id: id });
+    const classDevice = await this.classDeviceRepository.findOneBy({
+      class_device_id: id,
+    });
     if (!classDevice) {
       throw new NotFoundException(`ClassDevice con ID ${id} no encontrado`);
     }

@@ -1,72 +1,70 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Device } from 'src/data/entities/devices/device.entity';
+import { Source } from 'src/data/entities/sources/source.entity';
+import { SystemDevice } from 'src/data/entities/system_device/system_device.entity';
+import { Repository } from 'typeorm';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
+import { BaseService } from 'src/data/base/baseService/base-service.service';
 
 @Injectable()
-export class DevicesService {
+export class DevicesService extends BaseService<
+  Device,
+  CreateDeviceDto,
+  UpdateDeviceDto
+> {
   constructor(
     @InjectRepository(Device)
-    private deviceRepository: Repository<Device>,
-  ) {}
+    private readonly deviceRepository: Repository<Device>,
+  ) {
+    super(deviceRepository, 'Device', ['source', 'systemDevice']);
+  }
 
-async create(dto: CreateDeviceDto): Promise<Device> {
-  const device = this.deviceRepository.create({
-    name: dto.name,
-    source: { sources_id: dto.sources_id },  // Relación con Source
-    systemDevice: { system_device_id: dto.system_device_id }, // 🔧 Esto es lo clave
-    is_active: dto.is_active ?? true,
-    communication_route: dto.communication_route,
-    event: dto.event,
-    user_id: dto.user_id,
-  });
-  return await this.deviceRepository.save(device);
-}
+  override async create(dto: CreateDeviceDto): Promise<Device> {
+    const source = dto.sources_id
+      ? this.deviceRepository.manager.create(Source, { sources_id: dto.sources_id })
+      : undefined;
 
+    const systemDevice = dto.system_device_id
+      ? this.deviceRepository.manager.create(SystemDevice, { system_device_id: dto.system_device_id })
+      : undefined;
 
-
-  async findAll(): Promise<Device[]> {
-    return this.deviceRepository.find({
-      relations: ['source', 'systemDevice']
+    const entity = this.deviceRepository.create({
+      ...dto,
+      source,
+      systemDevice,
     });
+
+    return this.deviceRepository.save(entity);
   }
 
-  async findOne(id: number): Promise<Device> {
-    const device = await this.deviceRepository.findOneBy({ device_id: id });
-    if (!device) throw new NotFoundException(`Device con ID ${id} no encontrado`);
-    return device;
-  }
+  override async update(id: number, dto: UpdateDeviceDto) {
+    const device = await this.deviceRepository.findOne({
+      where: { device_id: id },
+    });
 
-  async update(id: number, dto: UpdateDeviceDto): Promise<Device> {
-  const device = await this.deviceRepository.findOne({ where: { device_id: id } });
-  if (!device) throw new NotFoundException(`Device con ID ${id} no encontrado`);
-
-  // Asignar campos simples
-  Object.assign(device, {
-    name: dto.name ?? device.name,
-    is_active: dto.is_active ?? device.is_active,
-    communication_route: dto.communication_route ?? device.communication_route,
-    event: dto.event ?? device.event,
-    user_id: dto.user_id ?? device.user_id,
-  });
-
-  // Asignar relaciones si vienen los IDs
-  if (dto.sources_id) device.source = { sources_id: dto.sources_id } as any;
-  if (dto.system_device_id) device.systemDevice = { system_device_id: dto.system_device_id } as any;
-
-  return this.deviceRepository.save(device);
-}
-
-
-
-
-  async remove(id: number): Promise<{ message: string }> {
-    const result = await this.deviceRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Device con ID ${id} no encontrado`);
+    if (!device) {
+      throw new HttpException(...this.verbose.notFound());
     }
-    return { message: `Device con ID ${id} eliminado` };
+
+    if (dto.sources_id) {
+      device.source = this.deviceRepository.manager.create(Source, {
+        sources_id: dto.sources_id,
+      });
+    }
+
+    if (dto.system_device_id) {
+      device.systemDevice = this.deviceRepository.manager.create(SystemDevice, {
+        system_device_id: dto.system_device_id,
+      });
+    }
+
+    Object.assign(device, dto);
+
+    return {
+      item: await this.deviceRepository.save(device),
+      updatedData: {}, // si quieres puedes calcular cambios reales
+    };
   }
 }

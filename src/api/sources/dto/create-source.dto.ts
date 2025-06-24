@@ -1,8 +1,5 @@
-import { IsNumber } from "class-validator";
-
+import { IsNumber } from 'class-validator';
 export class CreateSourceDto {
-
-    @IsNumber()
-    type_id: number;
-
+  @IsNumber()
+  type_id: number;
 }

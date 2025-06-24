@@ -1,7 +1,13 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, IsObject } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsObject,
+} from 'class-validator';
 
 export class CreateDeviceDto {
-
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -26,7 +32,3 @@ export class CreateDeviceDto {
   @IsNumber()
   user_id: number;
 }
-
-
-
-
