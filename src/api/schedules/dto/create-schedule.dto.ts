@@ -21,7 +21,7 @@ export class CreateScheduleDto {
 
   @IsObject()
   days: Record<string, any>;
-
+WWWWWW
   @IsObject()
   value: Record<string, any>;
 

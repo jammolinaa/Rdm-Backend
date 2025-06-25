@@ -64,7 +64,7 @@ export class DevicesService extends BaseService<
 
     return {
       item: await this.deviceRepository.save(device),
-      updatedData: {}, // si quieres puedes calcular cambios reales
+      updatedData: {}, 
     };
   }
 }

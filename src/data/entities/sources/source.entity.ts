@@ -4,13 +4,14 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Type } from '../type/type.entity';
 import { Device } from '../devices/device.entity';
 
 @Entity('source')
 export class Source {
-  @PrimaryColumn({ unique: true })
+  @PrimaryGeneratedColumn()
   sources_id: number;
 
   @ManyToOne(() => Type, (type) => type.sources, { onDelete: 'CASCADE' })

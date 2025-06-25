@@ -45,9 +45,9 @@ export class Device {
   @OneToMany(() => LastValue, (lastValue) => lastValue.device, {onDelete: 'CASCADE'})
   lastValue: Array<LastValue>;
 
-  get id(): number {
-   return this.device_id;
-  }
+  // get id(): number {
+  //  return this.device_id;
+  // }
 
 }
   

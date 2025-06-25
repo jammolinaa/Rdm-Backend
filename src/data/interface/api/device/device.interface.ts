@@ -8,3 +8,4 @@ export interface IDevice {
   event: string;
   user_id: number;
 }
+

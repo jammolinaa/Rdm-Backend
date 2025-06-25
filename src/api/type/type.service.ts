@@ -1,44 +1,41 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
 import { Type } from 'src/data/entities/type/type.entity';
+import { BaseService } from 'src/data/base/baseService/base-service.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class TypeService {
+export class TypeService extends BaseService<
+  Type,
+  CreateTypeDto,
+  UpdateTypeDto
+> {
   constructor(
     @InjectRepository(Type)
     private readonly TypeRepository: Repository<Type>,
-  ) {}
-
-  async create(createTypeDto: CreateTypeDto): Promise<Type> {
-    const Type = this.TypeRepository.create(createTypeDto);
-    return await this.TypeRepository.save(Type);
+  ) {
+    super(TypeRepository, 'Type');
   }
 
-  async findAll(): Promise<Type[]> {
-    return this.TypeRepository.find();
+  override async create(dto: CreateTypeDto): Promise<Type> {
+    const entity = this.TypeRepository.create({ name: dto.name });
+    return await this.TypeRepository.save(entity);
   }
 
-  async findOne(id: number): Promise<Type> {
-    const Type = await this.TypeRepository.findOneBy({ type_id: id });
-    if (!Type) throw new NotFoundException(`Device con ID ${id} no encontrado`);
-    return Type;
-  }
+  override async update(id: number, dto: UpdateTypeDto) {
+    const entity = await this.TypeRepository.findOne({
+      where: { type_id: id },
+    });
 
-  async update(id: number, createTypeDto: UpdateTypeDto): Promise<Type> {
-    await this.TypeRepository.update(id, createTypeDto);
-    return this.findOne(id);
-  }
+    if (!entity) throw new HttpException(...this.verbose.notFound());
 
-  async remove(id: number): Promise<{ message: string }> {
-    const type = await this.TypeRepository.findOne({ where: { type_id: id } });
-    if (!type) {
-      throw new NotFoundException(`Type con ID ${id} no encontrado`);
-    }
+    Object.assign(entity, dto);
 
-    await this.TypeRepository.remove(type);
-    return { message: `Type con ID ${id} eliminado` };
+    return {
+      item: await this.TypeRepository.save(entity),
+      updatedData: {},
+    };
   }
 }

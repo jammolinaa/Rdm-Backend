@@ -1,61 +1,49 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Source } from 'src/data/entities/sources/source.entity';
 import { CreateSourceDto } from './dto/create-source.dto';
 import { UpdateSourceDto } from './dto/update-source.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Source } from 'src/data/entities/sources/source.entity';
-import { Repository } from 'typeorm';
+import { BaseService } from 'src/data/base/baseService/base-service.service';
+import { ICreateSource } from 'src/data/interface/api/source/source.interface'; // este es el equivalente a ICreateLastValue
 
 @Injectable()
-export class SourcesService {
+export class SourcesService extends BaseService<
+  Source,
+  CreateSourceDto,
+  UpdateSourceDto
+> {
   constructor(
     @InjectRepository(Source)
     private readonly sourceRepository: Repository<Source>,
-  ) {}
-
-  async create(dto: CreateSourceDto): Promise<Source> {
-    const source = this.sourceRepository.create({
-      ...dto,
-      type: { type_id: dto.type_id },
-    });
-    return await this.sourceRepository.save(source);
+  ) {
+    super(sourceRepository, 'Source', ['type']);
   }
 
-  async findAll(): Promise<Source[]> {
-    return this.sourceRepository.find({
-      relations: ['type'],
+  override async create({ type_id, ...sourceData }: ICreateSource): Promise<Source> {
+    return this.sourceRepository.save({
+      ...sourceData,
+      type: { type_id },
     });
   }
 
-  async findOne(id: number): Promise<Source> {
-    const source = await this.sourceRepository.findOne({
+  override async update(id: number, dto: UpdateSourceDto) {
+    const entity = await this.sourceRepository.findOne({
       where: { sources_id: id },
       relations: ['type'],
     });
-    if (!source) {
-      throw new NotFoundException(`Source con ID ${id} no encontrado`);
-    }
-    return source;
-  }
 
-  async update(id: number, dto: UpdateSourceDto): Promise<Source> {
-    const source = await this.sourceRepository.preload({
-      sources_id: id,
-      ...dto,
-      type: dto.type_id ? { type_id: dto.type_id } : undefined,
-    });
+    if (!entity) throw new HttpException(...this.verbose.notFound());
 
-    if (!source) {
-      throw new NotFoundException(`Source con ID ${id} no encontrado`);
+    if (dto.type_id) {
+      entity.type = { type_id: dto.type_id } as any;
     }
 
-    return this.sourceRepository.save(source);
-  }
+    Object.assign(entity, dto);
 
-  async remove(id: number): Promise<{ message: string }> {
-    const result = await this.sourceRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Schedule con ID ${id} no encontrado`);
-    }
-    return { message: `Schedule con ID ${id} eliminado` };
+    return {
+      item: await this.sourceRepository.save(entity),
+      updatedData: {},
+    };
   }
 }
