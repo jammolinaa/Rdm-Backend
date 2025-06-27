@@ -4,56 +4,49 @@ import { Repository } from 'typeorm';
 import { Schedule } from 'src/data/entities/schedules/schedule.entity';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
-
+import { BaseService } from 'src/data/base/baseService/base-service.service';
+import { Device } from 'src/data/entities/devices/device.entity';
 @Injectable()
-export class SchedulesService {
+export class SchedulesService extends BaseService<
+  Schedule,
+  CreateScheduleDto,
+  UpdateScheduleDto
+> {
   constructor(
     @InjectRepository(Schedule)
     private readonly scheduleRepository: Repository<Schedule>,
-  ) {}
-
-  async create(dto: CreateScheduleDto): Promise<Schedule> {
+  ) {
+    super(scheduleRepository, 'Schedule', ['device'])
+  }
+  override async create(dto: CreateScheduleDto): Promise<Schedule> {
     const schedule = this.scheduleRepository.create({
       ...dto,
-      device: { device_id: dto.device_id },
+      device: { device_id: dto.device_id } as Device,
     });
 
     return await this.scheduleRepository.save(schedule);
   }
 
-  async findAll(): Promise<Schedule[]> {
-    return this.scheduleRepository.find();
-  }
 
-  async findOne(id: number): Promise<Schedule> {
-    const schedule = await this.scheduleRepository.findOneBy({
-      schedules_id: id,
-    });
-    if (!schedule) {
-      throw new NotFoundException(`Schedule con ID ${id} no encontrado`);
-    }
-    return schedule;
-  }
-
-  async update(id: number, dto: UpdateScheduleDto): Promise<Schedule> {
+  override async update(id: number, dto: UpdateScheduleDto): Promise<
+    {
+      item: Schedule & UpdateScheduleDto;
+      updatedData: Record<string, boolean>;
+    }> {
     const schedule = await this.scheduleRepository.preload({
       schedules_id: id,
       ...dto,
-      device: dto.device_id ? { device_id: dto.device_id } : undefined,
+       device: dto.device_id ? ({ device_id: dto.device_id } as Device) : undefined,
     });
 
     if (!schedule) {
       throw new NotFoundException(`Schedule con ID ${id} no encontrado`);
     }
 
-    return this.scheduleRepository.save(schedule);
-  }
-
-  async remove(id: number): Promise<{ message: string }> {
-    const result = await this.scheduleRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Schedule con ID ${id} no encontrado`);
-    }
-    return { message: `Schedule con ID ${id} eliminado` };
+    const updated = await this.scheduleRepository.save(schedule);
+    return {
+      item: updated as Schedule & UpdateScheduleDto,
+      updatedData: {},
+    };
   }
 }

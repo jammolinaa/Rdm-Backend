@@ -1,11 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateConditionDto } from './create-condition.dto';
-import { IsNotEmpty } from 'class-validator';
-
+import { IsOptional } from 'class-validator';
 export class UpdateConditionDto extends PartialType(CreateConditionDto) {
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
-
-  @IsNotEmpty()
-  description: string;
 }

@@ -5,7 +5,7 @@ import { Source } from 'src/data/entities/sources/source.entity';
 import { CreateSourceDto } from './dto/create-source.dto';
 import { UpdateSourceDto } from './dto/update-source.dto';
 import { BaseService } from 'src/data/base/baseService/base-service.service';
-import { ICreateSource } from 'src/data/interface/api/source/source.interface'; // este es el equivalente a ICreateLastValue
+import { ICreateSource } from 'src/data/interface/api/source/source.interface'; 
 
 @Injectable()
 export class SourcesService extends BaseService<

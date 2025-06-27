@@ -4,49 +4,45 @@ import { UpdateConditionDto } from './dto/update-condition.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Condition } from 'src/data/entities/conditions/condition.entity';
 import { Repository } from 'typeorm';
+import { BaseService } from 'src/data/base/baseService/base-service.service';
 
 @Injectable()
-export class ConditionsService {
+export class ConditionsService extends BaseService<
+  Condition,
+  CreateConditionDto,
+  UpdateConditionDto
+> {
   constructor(
     @InjectRepository(Condition)
-    private conditionRepository: Repository<Condition>,
-  ) {}
-  async create(dto: CreateConditionDto): Promise<Condition> {
+    private readonly conditionRepository: Repository<Condition>,
+  ) {
+    super(conditionRepository, 'Conditions');
+  }
+  override async create(dto: CreateConditionDto): Promise<Condition> {
     const condition = this.conditionRepository.create(dto);
     return await this.conditionRepository.save(condition);
   }
 
-  async findAll(): Promise<Condition[]> {
-    return this.conditionRepository.find();
+  override async update(id: number, dto: UpdateConditionDto): Promise<{
+  item: Condition & UpdateConditionDto;
+  updatedData: Record<string, boolean>;
+}> {
+  const condition = await this.conditionRepository.preload({
+    condition_id: id,
+    ...dto,
+  });
+
+  if (!condition) {
+    throw new NotFoundException(`Condition con ID ${id} no encontrado`);
   }
 
-  async findOne(id: number): Promise<Condition> {
-    const condition = await this.conditionRepository.findOneBy({
-      condition_id: id,
-    });
-    if (!condition)
-      throw new NotFoundException(`Condition con ID ${id} no encontrado`);
-    return condition;
-  }
-
-  async update(id: number, dto: UpdateConditionDto): Promise<Condition> {
-    const condition = await this.conditionRepository.preload({
-      condition_id: id,
-      ...dto,
-    });
-
-    if (!condition) {
-      throw new NotFoundException(`Condition con ID ${id} no encontrado`);
-    }
-
-    return this.conditionRepository.save(condition);
-  }
-
-  async remove(id: number): Promise<{ message: string }> {
-    const result = await this.conditionRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`condition con ID ${id} no encontrado`);
-    }
-    return { message: `Device con ID ${id} eliminado` };
-  }
+  const updated = await this.conditionRepository.save(condition);
+  
+  return {
+    item: updated as Condition & UpdateConditionDto,
+    updatedData: {},
+  };
 }
+
+}
+
