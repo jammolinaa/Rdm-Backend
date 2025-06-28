@@ -4,8 +4,7 @@ import { Repository } from 'typeorm';
 import { Source } from 'src/data/entities/sources/source.entity';
 import { CreateSourceDto } from './dto/create-source.dto';
 import { UpdateSourceDto } from './dto/update-source.dto';
-import { BaseService } from 'src/data/base/baseService/base-service.service';
-import { ICreateSource } from 'src/data/interface/api/source/source.interface'; 
+import { BaseService } from 'src/data/base/baseService/base-service.service'; 
 
 @Injectable()
 export class SourcesService extends BaseService<
@@ -19,8 +18,7 @@ export class SourcesService extends BaseService<
   ) {
     super(sourceRepository, 'Source', ['type']);
   }
-
-  override async create({ type_id, ...sourceData }: ICreateSource): Promise<Source> {
+  override async create({ type_id, ...sourceData }: CreateSourceDto): Promise<Source> {
     return this.sourceRepository.save({
       ...sourceData,
       type: { type_id },

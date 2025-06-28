@@ -5,7 +5,7 @@ import { LastValue } from 'src/data/entities/last_value/last_value.entity';
 import { BaseService } from 'src/data/base/baseService/base-service.service';
 import { CreateLastValueDto } from './dto/create-last_value.dto';
 import { UpdateLastValueDto } from './dto/update-last_value.dto';
-import { ICreateLastValue } from 'src/data/interface/api/lastValue/last-value.interface';
+// import { ICreateLastValue } from 'src/data/interface/api/lastValue/last-value.interface';
 
 @Injectable()
 export class LastValueService extends BaseService<
@@ -23,7 +23,7 @@ export class LastValueService extends BaseService<
   override async create({
     device_id,
     ...lastValueData
-  }: ICreateLastValue): Promise<LastValue> {
+  }: CreateLastValueDto): Promise<LastValue> {
     return this.lastValueRepository.save({
       ...lastValueData,
       device: { device_id: device_id },

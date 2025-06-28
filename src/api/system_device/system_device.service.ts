@@ -1,69 +1,74 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SystemDevice } from 'src/data/entities/system_device/system_device.entity';
 import { CreateSystemDeviceDto } from './dto/create-system_device.dto';
 import { UpdateSystemDeviceDto } from './dto/update-system_device.dto';
+import { BaseService } from 'src/data/base/baseService/base-service.service';
+import { ClassDevice } from 'src/data/entities/class_device/class_device.entity';
+import { Type } from 'src/data/entities/type/type.entity';
+import { System } from 'src/data/entities/system/system.entity';
 
 @Injectable()
-export class SystemDeviceService {
+export class SystemDeviceService extends BaseService<
+  SystemDevice,
+  CreateSystemDeviceDto,
+  UpdateSystemDeviceDto
+> {
   constructor(
     @InjectRepository(SystemDevice)
     private readonly systemDeviceRepository: Repository<SystemDevice>,
-  ) {}
-
-  async create(dto: CreateSystemDeviceDto): Promise<SystemDevice> {
-    const systemDevice = this.systemDeviceRepository.create({
-      class_device: { class_device_id: dto.class_device_id },
-      type: { type_id: dto.type_id },
-      system: { system_id: dto.system_id },
-      propierty: dto.propierty,
-    });
+  ) {
+    super(systemDeviceRepository, 'Systemdevice', ['class_device', 'type', 'system']);
+  }
+  override async create(dto: CreateSystemDeviceDto): Promise<SystemDevice> {
+    const systemDevice = this.systemDeviceRepository.create(
+      {
+        class_device: { class_device_id: dto.class_device_id } as ClassDevice,
+        type: { type_id: dto.type_id } as Type,
+        system: { system_id: dto.system_id } as System,
+        propierty: dto.propierty,
+      });
 
     return await this.systemDeviceRepository.save(systemDevice);
   }
 
-  async findAll(): Promise<SystemDevice[]> {
-    return this.systemDeviceRepository.find({
-      relations: ['class_device', 'type', 'system'],
+  override async update(id: number, dto: UpdateSystemDeviceDto) {
+  const systemDevice = await this.systemDeviceRepository.findOne({
+    where: { system_device_id: id },
+  });
+
+  if (!systemDevice) {
+    throw new HttpException(...this.verbose.notFound());
+  }
+
+  const { class_device_id, type_id, system_id, ...rest } = dto; // Extraemos los campos que son solo para relaciones
+
+  if (class_device_id) { // Actualizamos las relaciones si vienen en el DTO
+    systemDevice.class_device = this.systemDeviceRepository.manager.create(ClassDevice, {
+      class_device_id,
     });
   }
 
-  async findOne(id: number): Promise<SystemDevice> {
-    const item = await this.systemDeviceRepository.findOne({
-      where: { system_device_id: id },
-      relations: ['class_device', 'type', 'system'],
+  if (type_id) {  
+    systemDevice.type = this.systemDeviceRepository.manager.create(Type, {
+      type_id,
     });
-
-    if (!item) {
-      throw new NotFoundException(`SystemDevice con ID ${id} no encontrado`);
-    }
-
-    return item;
   }
 
-  async update(id: number, dto: UpdateSystemDeviceDto): Promise<SystemDevice> {
-    const existing = await this.findOne(id);
-
-    const updated = {
-      ...existing,
-      ...(dto.class_device_id && {
-        class_device: { class_device_id: dto.class_device_id },
-      }),
-      ...(dto.type_id && { type: { type_id: dto.type_id } }),
-      ...(dto.system_id && { system: { system_id: dto.system_id } }),
-      ...(dto.propierty && { propierty: dto.propierty }),
-    };
-
-    await this.systemDeviceRepository.save(updated);
-    return this.findOne(id);
+  if (system_id) {
+    systemDevice.system = this.systemDeviceRepository.manager.create(System, {
+      system_id,
+    });
   }
 
-  async remove(id: number): Promise<{ message: string }> {
-    const result = await this.systemDeviceRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`SystemDevice con ID ${id} no encontrado`);
-    }
-    return { message: `SystemDevice con ID ${id} eliminado` };
-  }
+  Object.assign(systemDevice, rest);
+
+  const item = await this.systemDeviceRepository.save(systemDevice);
+
+  return {
+    item,
+    updatedData: {}, 
+  };
+}
 }
