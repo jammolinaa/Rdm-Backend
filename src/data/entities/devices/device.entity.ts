@@ -13,7 +13,7 @@ export class Device {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @ManyToOne(() => Source, (source) => source.devices, {onDelete: 'CASCADE'})
+  @ManyToOne(() => Source, (source) => source.devices, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'sources_id' })
   source: Source;
 
@@ -36,14 +36,12 @@ export class Device {
   @Column()
   user_id: number;
 
-  @OneToMany(() => Schedule, (schedule) => schedule.device, {onDelete: 'CASCADE'})
+  @OneToMany(() => Schedule, (schedule) => schedule.device, { onDelete: 'CASCADE' })
   schedules: Array<Schedule>;
- 
+
   @OneToMany(() => Alert, (alerts) => alerts.device, { onDelete: 'CASCADE' })
   alerts: Array<Alert>;
 
-  @OneToMany(() => LastValue, (lastValue) => lastValue.device, {onDelete: 'CASCADE'})
+  @OneToMany(() => LastValue, (lastValue) => lastValue.device, { onDelete: 'CASCADE' })
   lastValue: Array<LastValue>;
-
 }
-  

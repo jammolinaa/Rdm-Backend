@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateLastValueDto } from './dto/create-last_value.dto';
 import { UpdateLastValueDto } from './dto/update-last_value.dto';
 import { LastValueService } from './last_value.service';
@@ -34,10 +24,7 @@ export class LastValueController {
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateLastValueDto: UpdateLastValueDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateLastValueDto: UpdateLastValueDto) {
     return this.lastValueService.update(+id, updateLastValueDto);
   }
 

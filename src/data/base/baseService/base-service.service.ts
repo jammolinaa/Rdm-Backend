@@ -206,7 +206,7 @@ export abstract class BaseService<EntityRepo extends ObjectLiteral, CreateDto, U
     queryRunner: EntityManager,
     entity: EntityTarget<T>,
     methodName: keyof EntityManager,
-    options?:   EntityManagerOptions<typeof methodName, T>,
+    options?: EntityManagerOptions<typeof methodName, T>,
   ): Promise<EntityManagerReturnType<typeof methodName, T>> {
     if (typeof queryRunner[methodName] !== 'function') {
       throw new Error(`Método ${methodName} no soportado en el manager`);
@@ -246,4 +246,3 @@ type EntityManagerReturnType<T extends keyof EntityManager, E> = T extends 'find
       : T extends 'delete'
         ? Promise<DeleteResult>
         : T;
-  

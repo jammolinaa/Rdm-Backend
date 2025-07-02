@@ -10,4 +10,3 @@
 // export type ICreateLastValue = Omit<IlastValue, 'last_value_id' | 'device'> & {
 //   device_id: number;
 // };
-

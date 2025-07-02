@@ -1,20 +1,18 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Source } from "../sources/source.entity";
-import { SystemDevice } from "../system_device/system_device.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Source } from '../sources/source.entity';
+import { SystemDevice } from '../system_device/system_device.entity';
 
 @Entity('type')
-
 export class Type {
+  @PrimaryGeneratedColumn()
+  type_id: number;
 
-    @PrimaryGeneratedColumn()
-    type_id: number;
+  @Column()
+  name: string;
 
-    @Column()
-    name: string;
-    
-    @OneToMany(() => Source, (source) => source.type, { onDelete: 'CASCADE' })
-    sources: Array<Source>;
+  @OneToMany(() => Source, (source) => source.type, { onDelete: 'CASCADE' })
+  sources: Array<Source>;
 
-    @OneToMany(() => SystemDevice, (systemdevice) => systemdevice.type, { onDelete: 'CASCADE' })
-    systemDevices: Array<SystemDevice>; 
+  @OneToMany(() => SystemDevice, (systemdevice) => systemdevice.type, { onDelete: 'CASCADE' })
+  systemDevices: Array<SystemDevice>;
 }

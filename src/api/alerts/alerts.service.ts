@@ -9,11 +9,7 @@ import { Device } from 'src/data/entities/devices/device.entity';
 import { Condition } from 'src/data/entities/conditions/condition.entity';
 
 @Injectable()
-export class AlertsService extends BaseService<
-  Alert,
-  CreateAlertDto,
-  UpdateAlertDto
-> {
+export class AlertsService extends BaseService<Alert, CreateAlertDto, UpdateAlertDto> {
   constructor(
     @InjectRepository(Alert)
     private readonly alertRepository: Repository<Alert>,
@@ -21,11 +17,7 @@ export class AlertsService extends BaseService<
     super(alertRepository, 'Alert', ['condition', 'device']);
   }
 
-  override async create({ 
-    condition_id,
-    device_id, 
-    ...alertData 
-  }: CreateAlertDto): Promise<Alert> {
+  override async create({ condition_id, device_id, ...alertData }: CreateAlertDto): Promise<Alert> {
     return this.alertRepository.save({
       ...alertData,
       condition: { condition_id } as Condition,
@@ -48,7 +40,7 @@ export class AlertsService extends BaseService<
 
   override async update(id: number, dto: UpdateAlertDto) {
     const entity = await this.alertRepository.findOne({
-      where: {alerts_id: id} ,
+      where: { alerts_id: id },
       relations: ['condition', 'device'],
       // condition: dto.condition_id
       //   ? { condition_id: dto.condition_id }
@@ -56,21 +48,19 @@ export class AlertsService extends BaseService<
       // device: dto.device_id ? { device_id: dto.device_id } : undefined,
     });
 
-     if (!entity) throw new HttpException(...this.verbose.notFound());
+    if (!entity) throw new HttpException(...this.verbose.notFound());
 
-     if (dto.device_id) {
+    if (dto.device_id) {
       entity.device = { device_id: dto.device_id } as any;
     }
     if (dto.condition_id) {
       entity.condition = { condition_id: dto.condition_id } as any;
     }
-    Object.assign(entity,dto);
+    Object.assign(entity, dto);
 
-     return {
-
+    return {
       item: await this.alertRepository.save(entity),
-      updatedData:{},
-     };
+      updatedData: {},
+    };
   }
-
 }

@@ -1,11 +1,4 @@
-import {
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { Type } from '../type/type.entity';
 import { Device } from '../devices/device.entity';
 

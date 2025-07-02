@@ -9,11 +9,7 @@ import { UpdateDeviceDto } from './dto/update-device.dto';
 import { BaseService } from 'src/data/base/baseService/base-service.service';
 
 @Injectable()
-export class DevicesService extends BaseService<
-  Device,
-  CreateDeviceDto,
-  UpdateDeviceDto
-> {
+export class DevicesService extends BaseService<Device, CreateDeviceDto, UpdateDeviceDto> {
   constructor(
     @InjectRepository(Device)
     private readonly deviceRepository: Repository<Device>,
@@ -22,21 +18,17 @@ export class DevicesService extends BaseService<
   }
 
   override async create(dto: CreateDeviceDto): Promise<Device> {
-    const source = dto.sources_id
-      ? this.deviceRepository.manager.create(Source, { sources_id: dto.sources_id })
-      : undefined;
-
-    const systemDevice = dto.system_device_id
-      ? this.deviceRepository.manager.create(SystemDevice, { system_device_id: dto.system_device_id })
-      : undefined;
-
-    const entity = this.deviceRepository.create({
-      ...dto,
-      source,
-      systemDevice,
+    const device = this.deviceRepository.create({
+      name: dto.name,
+      is_active: dto.is_active ?? true,
+      communication_route: dto.communication_route,
+      event: dto.event,
+      user_id: dto.user_id,
+      source: { sources_id: dto.sources_id } as Source,
+      systemDevice: { system_device_id: dto.system_device_id } as SystemDevice,
     });
 
-    return this.deviceRepository.save(entity);
+    return await this.deviceRepository.save(device);
   }
 
   override async update(id: number, dto: UpdateDeviceDto) {
@@ -64,7 +56,7 @@ export class DevicesService extends BaseService<
 
     return {
       item: await this.deviceRepository.save(device),
-      updatedData: {}, 
+      updatedData: {},
     };
   }
 }

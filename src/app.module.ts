@@ -7,9 +7,9 @@ import { ApiModule } from './api/api.module';
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: async () => typeOrmConfig,
-      }),
-      ApiModule
-    ],
+    }),
+    ApiModule,
+  ],
   controllers: [],
   providers: [],
 })

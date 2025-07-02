@@ -1,4 +1,4 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateTypeDto } from './dto/create-type.dto';
 import { UpdateTypeDto } from './dto/update-type.dto';
 import { Type } from 'src/data/entities/type/type.entity';
@@ -7,11 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class TypeService extends BaseService<
-  Type,
-  CreateTypeDto,
-  UpdateTypeDto
-> {
+export class TypeService extends BaseService<Type, CreateTypeDto, UpdateTypeDto> {
   constructor(
     @InjectRepository(Type)
     private readonly TypeRepository: Repository<Type>,

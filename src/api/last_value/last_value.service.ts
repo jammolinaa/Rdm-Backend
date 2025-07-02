@@ -8,11 +8,7 @@ import { UpdateLastValueDto } from './dto/update-last_value.dto';
 // import { ICreateLastValue } from 'src/data/interface/api/lastValue/last-value.interface';
 
 @Injectable()
-export class LastValueService extends BaseService<
-  LastValue,
-  CreateLastValueDto,
-  UpdateLastValueDto
-> {
+export class LastValueService extends BaseService<LastValue, CreateLastValueDto, UpdateLastValueDto> {
   constructor(
     @InjectRepository(LastValue)
     private readonly lastValueRepository: Repository<LastValue>,
@@ -20,10 +16,7 @@ export class LastValueService extends BaseService<
     super(lastValueRepository, 'LastValue', ['device']);
   }
 
-  override async create({
-    device_id,
-    ...lastValueData
-  }: CreateLastValueDto): Promise<LastValue> {
+  override async create({ device_id, ...lastValueData }: CreateLastValueDto): Promise<LastValue> {
     return this.lastValueRepository.save({
       ...lastValueData,
       device: { device_id: device_id },

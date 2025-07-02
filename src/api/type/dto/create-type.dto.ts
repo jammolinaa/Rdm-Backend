@@ -1,10 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from 'class-validator';
 export class CreateTypeDto {
-
-    @IsString()
-    @IsNotEmpty()
-    name: string;
-
-    // @IsNumber()
-    // source_id: number;
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 }

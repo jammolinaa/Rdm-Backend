@@ -7,11 +7,7 @@ import { UpdateSystemDto } from './dto/update-system.dto';
 import { BaseService } from 'src/data/base/baseService/base-service.service';
 
 @Injectable()
-export class SystemService extends BaseService<
-  System,
-  CreateSystemDto,
-  UpdateSystemDto
-> {
+export class SystemService extends BaseService<System, CreateSystemDto, UpdateSystemDto> {
   constructor(
     @InjectRepository(System)
     private readonly systemRepository: Repository<System>,
@@ -23,11 +19,13 @@ export class SystemService extends BaseService<
     return await this.systemRepository.save(system);
   }
 
-  override async update(id: number, dto: UpdateSystemDto): Promise<
-    {
-      item: System & UpdateSystemDto;
-      updatedData: Record<string, boolean>;
-    }> {
+  override async update(
+    id: number,
+    dto: UpdateSystemDto,
+  ): Promise<{
+    item: System & UpdateSystemDto;
+    updatedData: Record<string, boolean>;
+  }> {
     const system = await this.systemRepository.preload({
       system_id: id,
       ...dto,

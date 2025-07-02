@@ -7,11 +7,7 @@ import { UpdateClassDeviceDto } from './dto/update-class_device.dto';
 import { BaseService } from 'src/data/base/baseService/base-service.service';
 
 @Injectable()
-export class ClassDeviceService extends BaseService<
-  ClassDevice,
-  CreateClassDeviceDto,
-  UpdateClassDeviceDto
-> {
+export class ClassDeviceService extends BaseService<ClassDevice, CreateClassDeviceDto, UpdateClassDeviceDto> {
   constructor(
     @InjectRepository(ClassDevice)
     private readonly classDeviceRepository: Repository<ClassDevice>,
@@ -23,15 +19,17 @@ export class ClassDeviceService extends BaseService<
     return await this.classDeviceRepository.save(classDevice);
   }
 
-  override async update(id: number, dto: UpdateClassDeviceDto): Promise<
-    {
-      item: ClassDevice & UpdateClassDeviceDto;
-      updatedData: Record<string, boolean>;
-    }> {
+  override async update(
+    id: number,
+    dto: UpdateClassDeviceDto,
+  ): Promise<{
+    item: ClassDevice & UpdateClassDeviceDto;
+    updatedData: Record<string, boolean>;
+  }> {
     const classDevice = await this.classDeviceRepository.preload({
       class_device_id: id,
       ...dto,
-    })
+    });
 
     if (!classDevice) {
       throw new NotFoundException(`ClassDevice con ID ${id} no encontrado`);

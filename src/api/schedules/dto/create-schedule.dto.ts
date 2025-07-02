@@ -1,11 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsObject,
-  IsBoolean,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsObject, IsBoolean } from 'class-validator';
 
 export class CreateScheduleDto {
   @IsNumber()
@@ -21,7 +14,7 @@ export class CreateScheduleDto {
 
   @IsObject()
   days: Record<string, any>;
-WWWWWW
+  WWWWWW;
   @IsObject()
   value: Record<string, any>;
 

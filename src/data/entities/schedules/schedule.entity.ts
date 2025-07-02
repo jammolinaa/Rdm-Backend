@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Device } from '../devices/device.entity';
 
 @Entity('schedules')
@@ -10,7 +9,7 @@ export class Schedule {
   @ManyToOne(() => Device, (device) => device.schedules, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'device_id' })
   device: Device;
-  
+
   @Column({ type: 'varchar', length: 255 })
   name: string;
 

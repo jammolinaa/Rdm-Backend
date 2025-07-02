@@ -4,14 +4,10 @@ import { Repository } from 'typeorm';
 import { Source } from 'src/data/entities/sources/source.entity';
 import { CreateSourceDto } from './dto/create-source.dto';
 import { UpdateSourceDto } from './dto/update-source.dto';
-import { BaseService } from 'src/data/base/baseService/base-service.service'; 
+import { BaseService } from 'src/data/base/baseService/base-service.service';
 
 @Injectable()
-export class SourcesService extends BaseService<
-  Source,
-  CreateSourceDto,
-  UpdateSourceDto
-> {
+export class SourcesService extends BaseService<Source, CreateSourceDto, UpdateSourceDto> {
   constructor(
     @InjectRepository(Source)
     private readonly sourceRepository: Repository<Source>,

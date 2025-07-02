@@ -21,11 +21,9 @@ export class SystemDevice {
   @JoinColumn({ name: 'system_id' })
   system: System;
 
-
   @Column({ type: 'json' })
   propierty: Record<string, any>;
 
   @OneToMany(() => Device, (device) => device.systemDevice)
   devices: Array<Device>;
-
-} 
+}

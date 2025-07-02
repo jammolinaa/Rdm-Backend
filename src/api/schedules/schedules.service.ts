@@ -7,16 +7,12 @@ import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { BaseService } from 'src/data/base/baseService/base-service.service';
 import { Device } from 'src/data/entities/devices/device.entity';
 @Injectable()
-export class SchedulesService extends BaseService<
-  Schedule,
-  CreateScheduleDto,
-  UpdateScheduleDto
-> {
+export class SchedulesService extends BaseService<Schedule, CreateScheduleDto, UpdateScheduleDto> {
   constructor(
     @InjectRepository(Schedule)
     private readonly scheduleRepository: Repository<Schedule>,
   ) {
-    super(scheduleRepository, 'Schedule', ['device'])
+    super(scheduleRepository, 'Schedule', ['device']);
   }
   override async create(dto: CreateScheduleDto): Promise<Schedule> {
     const schedule = this.scheduleRepository.create({
@@ -27,16 +23,17 @@ export class SchedulesService extends BaseService<
     return await this.scheduleRepository.save(schedule);
   }
 
-
-  override async update(id: number, dto: UpdateScheduleDto): Promise<
-    {
-      item: Schedule & UpdateScheduleDto;
-      updatedData: Record<string, boolean>;
-    }> {
+  override async update(
+    id: number,
+    dto: UpdateScheduleDto,
+  ): Promise<{
+    item: Schedule & UpdateScheduleDto;
+    updatedData: Record<string, boolean>;
+  }> {
     const schedule = await this.scheduleRepository.preload({
       schedules_id: id,
       ...dto,
-       device: dto.device_id ? ({ device_id: dto.device_id } as Device) : undefined,
+      device: dto.device_id ? ({ device_id: dto.device_id } as Device) : undefined,
     });
 
     if (!schedule) {

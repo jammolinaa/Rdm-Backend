@@ -7,11 +7,7 @@ import { Repository } from 'typeorm';
 import { BaseService } from 'src/data/base/baseService/base-service.service';
 
 @Injectable()
-export class ConditionsService extends BaseService<
-  Condition,
-  CreateConditionDto,
-  UpdateConditionDto
-> {
+export class ConditionsService extends BaseService<Condition, CreateConditionDto, UpdateConditionDto> {
   constructor(
     @InjectRepository(Condition)
     private readonly conditionRepository: Repository<Condition>,
@@ -23,26 +19,27 @@ export class ConditionsService extends BaseService<
     return await this.conditionRepository.save(condition);
   }
 
-  override async update(id: number, dto: UpdateConditionDto): Promise<{
-  item: Condition & UpdateConditionDto;
-  updatedData: Record<string, boolean>;
-}> {
-  const condition = await this.conditionRepository.preload({
-    condition_id: id,
-    ...dto,
-  });
+  override async update(
+    id: number,
+    dto: UpdateConditionDto,
+  ): Promise<{
+    item: Condition & UpdateConditionDto;
+    updatedData: Record<string, boolean>;
+  }> {
+    const condition = await this.conditionRepository.preload({
+      condition_id: id,
+      ...dto,
+    });
 
-  if (!condition) {
-    throw new NotFoundException(`Condition con ID ${id} no encontrado`);
+    if (!condition) {
+      throw new NotFoundException(`Condition con ID ${id} no encontrado`);
+    }
+
+    const updated = await this.conditionRepository.save(condition);
+
+    return {
+      item: updated as Condition & UpdateConditionDto,
+      updatedData: {},
+    };
   }
-
-  const updated = await this.conditionRepository.save(condition);
-  
-  return {
-    item: updated as Condition & UpdateConditionDto,
-    updatedData: {},
-  };
 }
-
-}
-

@@ -13,11 +13,11 @@ export class Alert {
   @Column()
   description: string;
 
-  @ManyToOne(() => Device, (device)=> device.alerts, {onDelete: 'CASCADE'})
+  @ManyToOne(() => Device, (device) => device.alerts, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'device_id' })
   device: Device;
 
-  @ManyToOne (() => Condition, (alert) => alert.condition, {onDelete: 'CASCADE'})
+  @ManyToOne(() => Condition, (alert) => alert.condition, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'condition_id' })
   condition: Condition;
 
