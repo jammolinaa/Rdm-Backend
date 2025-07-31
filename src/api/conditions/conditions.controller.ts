@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { ConditionsService } from './conditions.service';
 import { CreateConditionDto } from './dto/create-condition.dto';
 import { UpdateConditionDto } from './dto/update-condition.dto';
@@ -28,8 +28,9 @@ export class ConditionsController {
     return this.conditionsService.update(+id, updateConditionDto);
   }
 
+  // conditions.controller.ts
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.conditionsService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.conditionsService.delete(id); // 🔁 Este debe ser el del ConditionsService
   }
 }

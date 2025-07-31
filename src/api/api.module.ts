@@ -9,9 +9,13 @@ import { SystemModule } from './system/system.module';
 import { SystemDeviceModule } from './system_device/system_device.module';
 import { TypeModule } from './type/type.module';
 import { LastValueModule } from './last_value/last_value.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SourceModule } from 'src/core/source/source.module';
+import { CoreModule } from 'src/core/core-module';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     DevicesModule,
     SchedulesModule,
     ConditionsModule,
@@ -22,6 +26,8 @@ import { LastValueModule } from './last_value/last_value.module';
     ClassDeviceModule,
     SystemDeviceModule,
     LastValueModule,
+    SourceModule,
+    CoreModule,
   ],
   controllers: [],
   providers: [],
